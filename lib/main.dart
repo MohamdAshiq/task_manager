@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/views/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: "Task Manager",
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: Scaffold(),
+      home: HomePage(),
     );
   }
 }
