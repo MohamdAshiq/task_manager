@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/widgets/custom_floating_action_button_widget.dart';
 import 'package:task_manager/widgets/task_stats_cards_section.dart';
 
 class HomePage extends StatelessWidget {
@@ -87,6 +88,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: CustomFloatingActionButtonWidget(),
     );
   }
 }
