@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_manager/models/task_model.dart';
+import 'package:task_manager/notifiers/tasks_controller.dart';
 
-class CustomFloatingActionButtonWidget extends StatelessWidget {
+class CustomFloatingActionButtonWidget extends StatefulWidget {
   const CustomFloatingActionButtonWidget({super.key});
+
+  @override
+  State<CustomFloatingActionButtonWidget> createState() =>
+      _CustomFloatingActionButtonWidgetState();
+}
+
+class _CustomFloatingActionButtonWidgetState
+    extends State<CustomFloatingActionButtonWidget> {
+  late TextEditingController taskController;
+
+  @override
+  void initState() {
+    taskController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    taskController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +44,7 @@ class CustomFloatingActionButtonWidget extends StatelessWidget {
             content: SizedBox(
               width: double.maxFinite,
               child: TextFormField(
+                controller: taskController,
                 style: TextStyle(fontFamily: "Poppins"),
                 decoration: InputDecoration(
                   hintText: "Enter Task Name",
@@ -35,7 +60,19 @@ class CustomFloatingActionButtonWidget extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 child: Text("CANCEL"),
               ),
-              TextButton(onPressed: () {}, child: Text("OK")),
+              TextButton(
+                onPressed: () {
+                  context.read<TasksController>().addToPendingTasks(
+                    TaskModel(
+                      taskName: taskController.text.trim(),
+                      isCompleted: false,
+                    ),
+                  );
+                  Navigator.pop(context);
+                  taskController.clear();
+                },
+                child: Text("OK"),
+              ),
             ],
           ),
         );
