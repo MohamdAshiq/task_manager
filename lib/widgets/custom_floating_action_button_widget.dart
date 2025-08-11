@@ -14,6 +14,7 @@ class CustomFloatingActionButtonWidget extends StatefulWidget {
 class _CustomFloatingActionButtonWidgetState
     extends State<CustomFloatingActionButtonWidget> {
   late TextEditingController taskController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -43,14 +44,20 @@ class _CustomFloatingActionButtonWidgetState
             contentPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
             content: SizedBox(
               width: double.maxFinite,
-              child: TextFormField(
-                controller: taskController,
-                style: TextStyle(fontFamily: "Poppins"),
-                decoration: InputDecoration(
-                  hintText: "Enter Task Name",
-                  hintStyle: TextStyle(fontFamily: "Poppins"),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+              child: Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: taskController,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? "This is required"
+                      : null,
+                  style: TextStyle(fontFamily: "Poppins"),
+                  decoration: InputDecoration(
+                    hintText: "Enter Task Name",
+                    hintStyle: TextStyle(fontFamily: "Poppins"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
               ),
@@ -62,14 +69,16 @@ class _CustomFloatingActionButtonWidgetState
               ),
               TextButton(
                 onPressed: () {
-                  context.read<TasksController>().addToPendingTasks(
-                    TaskModel(
-                      taskName: taskController.text.trim(),
-                      isCompleted: false,
-                    ),
-                  );
-                  Navigator.pop(context);
-                  taskController.clear();
+                  if (_formKey.currentState!.validate()) {
+                    context.read<TasksController>().addToPendingTasks(
+                      TaskModel(
+                        taskName: taskController.text.trim(),
+                        isCompleted: false,
+                      ),
+                    );
+                    Navigator.pop(context);
+                    taskController.clear();
+                  }
                 },
                 child: Text("OK"),
               ),
